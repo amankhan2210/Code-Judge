@@ -35,7 +35,7 @@ async function getstarted(req, res) {
         const [status, value] = result
         if (status === -1) return res.status(429).json({success: false,message: `Please try again in ${value} seconds.`,retryAfter: value})
         if (status === -2) return res.status(429).json({success: false,message: `Too many requests from your IP. Try again in ${value} seconds.`,retryAfter: value})
-        const otp = 88858 //await SendGenOtp(normalizedEmail) 
+        const otp = await SendGenOtp(normalizedEmail) 
         const hashedOtp = await bcrypt.hash(String(otp), 10)
         await redis.set(otpKey,hashedOtp,"EX",300)
         return res.status(200).json({success: true,message: "OTP sent successfully",otp})
