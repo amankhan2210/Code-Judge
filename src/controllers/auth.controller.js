@@ -1,8 +1,12 @@
 const SendGenOtp = require("../utils/email.util")
 const redis = require("../configs/redis")
 const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
+const crypto = require("crypto")
 const fs = require("fs")
 const path = require("path")
+const Session  = require("../models/session.model")
+const User = require("../models/user.model")
 
 const otpRateLimitScript = fs.readFileSync(
     path.join(__dirname, "../scripts/otpRateLimit.lua"),"utf8")
@@ -46,7 +50,100 @@ async function getstarted(req, res) {
     }
 }
 
+async function verifyOtp(req, res) {
+    const { email, otp } = req.body
+    if (!email || typeof email !== "string" || !otp || typeof otp !== "string") {
+        return res.status(400).json({success: false,message: "Valid email and OTP are required"})
+    }
+    const otpKey = `otp:email:${email.trim().toLowerCase()}`
+    const storedOtpHash = await redis.get(otpKey)
+    if (!storedOtpHash) return res.status(400).json({success: false,message: "OTP expired or not found. Please request a new OTP."})
+    const isOtpValid = await bcrypt.compare(otp, storedOtpHash)
+    if (!isOtpValid) return res.status(400).json({success: false,message: "Invalid OTP. Please try again."})
+    await redis.del(otpKey)
+    //new user
+    const user = await User.findOne({ email: email.trim().toLowerCase() })
+    if(!user) {
+        // Handle new user registration logic here
+        const regToken = jwt.sign({ email: email.trim().toLowerCase(),purpose: "complete_registration" }, process.env.JWT_SECRET, { expiresIn: '15m' })
+        return res.status(200).json({success: true,message: "OTP verified successfully",regToken})
+    }
+    // user exits create Session
+    const refreshToken = jwt.sign({
+        id : user._id,
+        email : user.email,
+    },process.env.JWT_SECRET,{
+        expiresIn : '7d'
+    })
+    const refreshTokenHash = crypto.createHash("md5").update(refreshToken).digest("hex")
+    const session = await Session.create({
+    user : user._id,
+    refreshTokenHash,
+    ip : req.ip,
+    usergent : req.headers['user-agent']
+    })
+    const accessToken = jwt.sign({
+    id : user._id,
+    email : user.email,
+    sessionid : session._id,
+    },process.env.JWT_SECRET,{expiresIn : '15m'})
+
+    res.cookie("refreshToken",refreshToken,{
+    httpOnly : true,
+    secure : true,
+    sameSite : "strict",    
+    maxAge : 7 * 24 * 60 * 60 * 1000
+    })
+
+    return res.status(200).json({success: true,message: "OTP verified successfully",accessToken,refreshToken})
+
+}
+
+async function completeRegistration(req, res) {
+    const {username, name, phone, college, graduationYear } = req.body
+    const email = req.email
+    if(await User.findOne({email, username})) return res.status(400).json({success: false,message: "Username  && email already exists"})
+    const user = await User.create({
+        email,
+        username,
+        name,
+        phone,
+        college,
+        graduationYear,
+        isVerified: true,
+        
+    })
+    const refreshToken = jwt.sign({
+        id : user._id,
+        email : user.email,
+    },process.env.JWT_SECRET,{
+        expiresIn : '7d'
+    })
+    const refreshTokenHash = crypto.createHash("md5").update(refreshToken).digest("hex")
+    const session = await Session.create({
+    user : user._id,
+    refreshTokenHash,
+    ip : req.ip,
+    usergent : req.headers['user-agent']
+    })
+    const accessToken = jwt.sign({
+    id : user._id,
+    email : user.email,
+    sessionid : session._id,
+    },process.env.JWT_SECRET,{expiresIn : '15m'})
+
+    res.cookie("refreshToken",refreshToken,{
+    httpOnly : true,
+    secure : true,
+    sameSite : "strict",    
+    maxAge : 7 * 24 * 60 * 60 * 1000
+    })
+    return res.status(201).json({success: true,message: "User registered successfully",user,accessToken,refreshToken})    
+}
 
 
-
-module.exports = { getstarted };
+module.exports = { 
+    getstarted,
+    verifyOtp,
+    completeRegistration
+};
