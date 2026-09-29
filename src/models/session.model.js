@@ -22,11 +22,11 @@ const sessionSchema = new mongoose.Schema(
             type: String,
             default: null
         },
+        revoked : {
+        type : Boolean,
+        default : false
+        },
 
-        expiresAt: {
-            type: Date,
-            required: true
-        }
     },
     {
         timestamps: true
