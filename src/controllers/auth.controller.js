@@ -68,6 +68,7 @@ async function verifyOtp(req, res) {
         const regToken = jwt.sign({ email: email.trim().toLowerCase(),purpose: "complete_registration" }, process.env.JWT_SECRET, { expiresIn: '15m' })
         return res.status(200).json({success: true,message: "OTP verified successfully",regToken})
     }
+    await Session.updateMany({user : user.id, revoked:false},{revoked:true})
     // user exits create Session
     const refreshToken = jwt.sign({
         id : user._id,
@@ -80,7 +81,7 @@ async function verifyOtp(req, res) {
     user : user._id,
     refreshTokenHash,
     ip : req.ip,
-    usergent : req.headers['user-agent']
+    userAgent : req.headers['user-agent']
     })
     const accessToken = jwt.sign({
     id : user._id,
@@ -124,7 +125,7 @@ async function completeRegistration(req, res) {
     user : user._id,
     refreshTokenHash,
     ip : req.ip,
-    usergent : req.headers['user-agent']
+    userAgent : req.headers['user-agent']
     })
     const accessToken = jwt.sign({
     id : user._id,
@@ -141,9 +142,64 @@ async function completeRegistration(req, res) {
     return res.status(201).json({success: true,message: "User registered successfully",user,accessToken,refreshToken})    
 }
 
+async function rotatetoken(req,res) {
+    const refreshToken = req.cookies.refreshToken
+    // const { refreshToken } = req.body
+    if(!refreshToken) return res.status(401).json({msg : " Token  not found"})
+    try {
+        const rhash = crypto.createHash("md5").update(refreshToken).digest("hex")
+        const session = await Session.findOne({refreshTokenHash:rhash,revoked:false})
+        if(!session) return res.status(401).json({msg:"session not found"})
+        const decoded = jwt.verify(refreshToken,process.env.JWT_SECRET)
+        const user = await User.findById(decoded.id)
+        const accessToken = jwt.sign({
+            id : user._id,
+            sessionid : session._id,
+            email : user.email,
+        },process.env.JWT_SECRET,{
+          expiresIn : '15m'
+        })
+        const newrefreshToken = jwt.sign({
+            id : user._id,
+            email : user.email,
+        },process.env.JWT_SECRET,{
+        expiresIn : '7d'
+        })
+        const nrhash = crypto.createHash("md5").update(newrefreshToken).digest("hex")
+        session.refreshTokenHash =nrhash
+        await session.save()
+        res.cookie("refreshToken",newrefreshToken,{
+        httpOnly : true,
+        secure : true,
+        sameSite : "strict",
+        maxAge : 7 * 24 * 60 * 60 * 1000
+        })
+        return res.status(200).json({accessToken,newrefreshToken})   
+    } catch (error) {
+        return res.status(401).json({msg : "wrong access token"})
+    }
+}
+
+async function logout(req,res) {
+    // const { refreshToken } = req.body
+    const refreshToken = req.cookies.refreshToken
+    if(!refreshToken) return res.status(401).json({msg : "Invalid token or not found"})
+    const rhash = crypto.createHash("md5").update(refreshToken).digest("hex")
+    const session = await Session.findOne({refreshTokenHash:rhash,revoked:false})
+    if(!session) return res.status(401).json({msg : "Invalid token Session not found"})
+    session.revoked = true
+    await session.save()
+    res.clearCookie('refreshToken')
+    return res.status(200).json({msg : "Logout-Successfully"})
+}
+
+
 
 module.exports = { 
     getstarted,
     verifyOtp,
-    completeRegistration
+    completeRegistration,
+    rotatetoken,
+    logout,
+    
 };
