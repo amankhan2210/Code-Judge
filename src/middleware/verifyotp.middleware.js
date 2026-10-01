@@ -12,12 +12,16 @@ const rateLimitScript = fs.readFileSync(
 
 const verifyOtpLimiter = async (req, res, next) => {
     try {
+        const { email } = req.body
+        const normalizedEmail = email.trim().toLowerCase();
         const ip = req.ip
         const redisKey = `ratelimit:verifyotp:${ip}`
+        const emailKey = `ratelimit:verifyotp:email:${normalizedEmail}`
         const result = await redis.eval(
             rateLimitScript,
-            1,
+            2,
             redisKey,
+            emailKey,
             MAX_REQUESTS,
             WINDOW_SECONDS
         )
@@ -28,7 +32,6 @@ const verifyOtpLimiter = async (req, res, next) => {
             })
         }
         next()
-
     } catch (error) {
         console.error("Rate limiter error:", error)
         return res.status(503).json({
@@ -37,5 +40,4 @@ const verifyOtpLimiter = async (req, res, next) => {
         })
     }
 }
-
 module.exports = verifyOtpLimiter
