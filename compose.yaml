@@ -55,7 +55,7 @@ services:
   email-worker:
     image: amankhan22/backend:latest
     container_name: email-worker
-    command: ["node", "src/workers/emailWorker.js"]
+    command: ["node", "src/workers/emailWorker.js"] 
     env_file:
       - .env
     environment:
