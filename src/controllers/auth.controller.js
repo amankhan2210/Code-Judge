@@ -1,21 +1,22 @@
-const SendGenOtp = require("../utils/email.util")
+// const SendGenOtp = require("../utils/email.util")
 const redis = require("../configs/redis")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const crypto = require("crypto")
 const Session  = require("../models/session.model")
 const User = require("../models/user.model")
-
+const emailQueue = require("../queues/emailQueue")
 
 async function getstarted(req, res) {
     try {
         const { email } = req.body
         if (!email || typeof email !== "string") return res.status(400).json({success: false,message: "Valid email is required"})     
         const normalizedEmail = email.trim().toLowerCase()
-        const otp =123 //await SendGenOtp(normalizedEmail) 
+        const otp = crypto.randomInt(100000, 1000000).toString() 
         const hashedOtp = await bcrypt.hash(String(otp), 10)
         const otpKey = `otp:email:${normalizedEmail}`
         await redis.set(otpKey,hashedOtp,"EX",300)
+        await emailQueue.add("sendOtp", {email: normalizedEmail,otp,})
         return res.status(200).json({success: true,message: "OTP sent successfully",otp})
     }
     catch (error) {

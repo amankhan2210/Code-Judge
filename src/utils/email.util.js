@@ -1,11 +1,7 @@
 // module.exports = SendGenOtp
-const crypto = require("crypto");
 const sendEmail = require("../services/email.service");
 
-async function SendGenOtp(email) {
-  const otp = crypto
-    .randomInt(100000, 1000000)
-    .toString();
+async function SendOtpEmail(email,otp) {
 
 const htmlTemplate = `
 <!DOCTYPE html>
@@ -314,4 +310,4 @@ const htmlTemplate = `
   return otp;
 }
 
-module.exports = SendGenOtp;
+module.exports = SendOtpEmail;
