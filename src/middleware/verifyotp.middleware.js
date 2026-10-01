@@ -14,7 +14,7 @@ const verifyOtpLimiter = async (req, res, next) => {
     try {
         const { email } = req.body
         const normalizedEmail = email.trim().toLowerCase();
-        const ip = req.ip
+        const ip = req.ip.replace(/^::ffff:/, "")
         const redisKey = `ratelimit:verifyotp:${ip}`
         const emailKey = `ratelimit:verifyotp:email:${normalizedEmail}`
         const result = await redis.eval(
