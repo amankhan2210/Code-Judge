@@ -1,5 +1,6 @@
 const express = require('express')
 const authRouter = require('../src/routes/auth.routes')
+const questionRouter = require('../src/routes/question.routes')
 const morgan = require('morgan')
 const cookieParser = require("cookie-parser")
 const app = express()
@@ -8,4 +9,5 @@ app.use(morgan('dev'))
 app.use(express.json());
 app.use(cookieParser())
 app.use('/api/auth',authRouter)
-module.exports = app
+app.use('/api/question',questionRouter)
+module.exports = app    
