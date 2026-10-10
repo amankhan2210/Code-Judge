@@ -9,280 +9,141 @@ const htmlTemplate = `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Code Elevate - Email Verification</title>
+    <title>CodeElevate - Email Verification</title>
+    <!-- Matches the CodeElevate landing-page typography; fallbacks support email clients. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
 
-<body style="
-    margin: 0;
-    padding: 0;
-    background-color: #080a08;
-    font-family: Arial, Helvetica, sans-serif;
-">
+<body style="margin:0;padding:0;background-color:#080b16;font-family:'DM Sans',Arial,Helvetica,sans-serif;color:#f3f4f8;">
 
-<table width="100%" cellpadding="0" cellspacing="0"
-    style="background-color: #080a08; padding: 40px 15px;">
-
+<table width="100%" cellpadding="0" cellspacing="0" role="presentation"
+    style="background-color:#080b16;padding:40px 15px;">
     <tr>
         <td align="center">
 
             <!-- Main Container -->
-            <table width="600" cellpadding="0" cellspacing="0"
-                style="
-                    max-width: 600px;
-                    width: 100%;
-                    background-color: #111410;
-                    border: 1px solid #292e25;
-                    border-radius: 16px;
-                    overflow: hidden;
-                ">
+            <table width="600" cellpadding="0" cellspacing="0" role="presentation"
+                style="max-width:600px;width:100%;background-color:#0d1220;border:1px solid #252b43;border-radius:16px;overflow:hidden;">
 
                 <!-- Top Accent -->
                 <tr>
-                    <td style="
-                        height: 4px;
-                        background-color: #B8FF00;
-                        font-size: 0;
-                        line-height: 0;
-                    ">&nbsp;</td>
+                    <td style="height:4px;background:linear-gradient(90deg,#7658f4 0%,#a855f7 58%,#22d3ee 100%);font-size:0;line-height:0;">&nbsp;</td>
                 </tr>
 
                 <!-- Header -->
                 <tr>
-                    <td align="center" style="padding: 40px 30px 25px;">
-
-                        <h1 style="
-                            margin: 0;
-                            color: #ffffff;
-                            font-size: 30px;
-                            font-weight: 800;
-                            letter-spacing: -1px;
-                        ">
-                            CODE <span style="color: #B8FF00;">ELEVATE</span>
+                    <td align="center" style="padding:36px 30px 25px;">
+                        <h1 style="margin:0;color:#f3f4f8;font-family:'Space Grotesk','DM Sans',Arial,sans-serif;font-size:29px;line-height:1.2;font-weight:700;letter-spacing:-1.2px;">
+                            Code<span style="color:#a996ff;">Elevate</span>
                         </h1>
-
-                        <p style="
-                            margin: 10px 0 0;
-                            color: #777d70;
-                            font-size: 11px;
-                            letter-spacing: 4px;
-                            text-transform: uppercase;
-                        ">
+                        <p style="margin:10px 0 0;color:#8792ac;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;">
                             Learn. Build. Elevate.
                         </p>
-
                     </td>
                 </tr>
 
                 <!-- Divider -->
                 <tr>
-                    <td style="padding: 0 40px;">
-                        <div style="
-                            height: 1px;
-                            background-color: #292e25;
-                        "></div>
+                    <td style="padding:0 40px;">
+                        <div style="height:1px;background-color:#252b43;font-size:0;line-height:0;">&nbsp;</div>
                     </td>
                 </tr>
 
                 <!-- Main Content -->
                 <tr>
-                    <td style="padding: 40px 40px 20px;">
-
-                        <p style="
-                            margin: 0 0 15px;
-                            color: #B8FF00;
-                            font-size: 12px;
-                            font-weight: bold;
-                            letter-spacing: 2px;
-                            text-transform: uppercase;
-                        ">
+                    <td style="padding:38px 40px 18px;">
+                        <p style="margin:0 0 14px;color:#a996ff;font-size:11px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;">
                             Account Security
                         </p>
 
-                        <h2 style="
-                            margin: 0 0 18px;
-                            color: #ffffff;
-                            font-size: 28px;
-                            line-height: 1.3;
-                            font-weight: 700;
-                        ">
+                        <h2 style="margin:0 0 17px;color:#f3f4f8;font-family:'Space Grotesk','DM Sans',Arial,sans-serif;font-size:29px;line-height:1.25;font-weight:700;letter-spacing:-1px;">
                             Verify Your<br>
-                            <span style="color: #B8FF00;">Email Address.</span>
+                            <span style="color:#a996ff;">Email Address.</span>
                         </h2>
 
-                        <p style="
-                            margin: 0;
-                            color: #a1a69b;
-                            font-size: 15px;
-                            line-height: 1.8;
-                        ">
-                            Welcome to Code Elevate. Use the verification
+                        <p style="margin:0;color:#a4aec4;font-size:14px;line-height:1.85;">
+                            Welcome to CodeElevate. Use the verification
                             code below to securely complete your
                             authentication and get started.
                         </p>
 
                         <!-- Email Address -->
-                        <table width="100%" cellpadding="0" cellspacing="0"
-                            style="
-                                margin-top: 25px;
-                                background-color: #191d16;
-                                border: 1px solid #292e25;
-                                border-radius: 10px;
-                            ">
+                        <table width="100%" cellpadding="0" cellspacing="0" role="presentation"
+                            style="margin-top:24px;background-color:#11182a;border:1px solid #252b43;border-radius:10px;">
                             <tr>
-                                <td style="padding: 16px 20px;">
-
-                                    <p style="
-                                        margin: 0 0 7px;
-                                        color: #777d70;
-                                        font-size: 11px;
-                                        letter-spacing: 1.5px;
-                                        text-transform: uppercase;
-                                    ">
+                                <td style="padding:16px 19px;">
+                                    <p style="margin:0 0 7px;color:#8792ac;font-size:10px;font-weight:600;letter-spacing:1.3px;text-transform:uppercase;">
                                         Verification requested for
                                     </p>
-
-                                    <p style="
-                                        margin: 0;
-                                        color: #B8FF00;
-                                        font-size: 15px;
-                                        font-weight: bold;
-                                        word-break: break-word;
-                                    ">
-                                        ${email}
+                                    <p style="margin:0;color:#22d3ee;font-size:14px;font-weight:700;word-break:break-word;">
+                                       ${email}
                                     </p>
-
                                 </td>
                             </tr>
                         </table>
-
                     </td>
                 </tr>
 
                 <!-- OTP Section -->
                 <tr>
-                    <td align="center" style="padding: 25px 30px 30px;">
-
-                        <p style="
-                            margin: 0 0 15px;
-                            color: #777d70;
-                            font-size: 12px;
-                            letter-spacing: 2px;
-                            text-transform: uppercase;
-                        ">
+                    <td align="center" style="padding:22px 30px 30px;">
+                        <p style="margin:0 0 15px;color:#8792ac;font-size:11px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;">
                             Your Verification Code
                         </p>
 
-                        <table cellpadding="0" cellspacing="0"
-                            style="
-                                background-color: #1a2014;
-                                border: 1px solid #B8FF00;
-                                border-radius: 12px;
-                            ">
+                        <table cellpadding="0" cellspacing="0" role="presentation"
+                            style="background-color:#17152d;border:1px solid #8b6cff;border-radius:12px;">
                             <tr>
-                                <td align="center" style="
-                                    padding: 22px 35px;
-                                    color: #B8FF00;
-                                    font-size: 36px;
-                                    font-weight: 800;
-                                    letter-spacing: 12px;
-                                ">
+                                <td align="center" style="padding:21px 32px;color:#b5a4ff;font-family:'Space Grotesk','DM Sans',Arial,sans-serif;font-size:35px;line-height:1.2;font-weight:700;letter-spacing:10px;">
                                     ${otp}
                                 </td>
                             </tr>
                         </table>
 
-                        <p style="
-                            margin: 20px 0 0;
-                            color: #a1a69b;
-                            font-size: 14px;
-                        ">
+                        <p style="margin:19px 0 0;color:#a4aec4;font-size:13px;line-height:1.7;">
                             This code expires in
-                            <strong style="color: #B8FF00;">
-                                10 minutes
-                            </strong>.
+                            <strong style="color:#22d3ee;">10 minutes</strong>.
                         </p>
-
                     </td>
                 </tr>
 
                 <!-- Security Notice -->
                 <tr>
-                    <td style="padding: 10px 40px 35px;">
-
-                        <table width="100%" cellpadding="0" cellspacing="0"
-                            style="
-                                background-color: #191d16;
-                                border-left: 3px solid #B8FF00;
-                            ">
+                    <td style="padding:8px 40px 34px;">
+                        <table width="100%" cellpadding="0" cellspacing="0" role="presentation"
+                            style="background-color:#11182a;border:1px solid #252b43;border-left:3px solid #8b6cff;border-radius:7px;">
                             <tr>
-                                <td style="padding: 18px 20px;">
-
-                                    <p style="
-                                        margin: 0;
-                                        color: #a1a69b;
-                                        font-size: 13px;
-                                        line-height: 1.7;
-                                    ">
-                                        <strong style="color: #ffffff;">
+                                <td style="padding:17px 19px;">
+                                    <p style="margin:0;color:#a4aec4;font-size:12px;line-height:1.8;">
+                                        <strong style="color:#f3f4f8;font-family:'Space Grotesk','DM Sans',Arial,sans-serif;">
                                             Security Notice
                                         </strong><br>
-                                        Never share this verification code
-                                        with anyone. Code Elevate will never
-                                        ask you for your OTP.
+                                        Never share this verification code with anyone. CodeElevate will never ask you for your OTP.
                                     </p>
-
                                 </td>
                             </tr>
                         </table>
 
-                        <p style="
-                            margin: 25px 0 0;
-                            color: #777d70;
-                            font-size: 13px;
-                            line-height: 1.7;
-                            text-align: center;
-                        ">
-                            If you did not request this code, you can
-                            safely ignore this email.
+                        <p style="margin:23px 0 0;color:#8792ac;font-size:12px;line-height:1.8;text-align:center;">
+                            If you did not request this code, you can safely ignore this email.
                         </p>
-
                     </td>
                 </tr>
 
                 <!-- Footer -->
                 <tr>
-                    <td align="center" style="
-                        background-color: #0c0e0b;
-                        border-top: 1px solid #292e25;
-                        padding: 28px 20px;
-                    ">
-
-                        <p style="
-                            margin: 0;
-                            color: #ffffff;
-                            font-size: 17px;
-                            font-weight: bold;
-                        ">
-                            CODE <span style="color: #B8FF00;">ELEVATE</span>
+                    <td align="center" style="background-color:#090d18;border-top:1px solid #252b43;padding:27px 20px;">
+                        <p style="margin:0;color:#f3f4f8;font-family:'Space Grotesk','DM Sans',Arial,sans-serif;font-size:17px;font-weight:700;letter-spacing:-.5px;">
+                            Code<span style="color:#a996ff;">Elevate</span>
                         </p>
-
-                        <p style="
-                            margin: 10px 0 0;
-                            color: #777d70;
-                            font-size: 12px;
-                            line-height: 1.6;
-                        ">
+                        <p style="margin:10px 0 0;color:#8792ac;font-size:11px;line-height:1.7;">
                             Empowering developers to build a better future.
                         </p>
-
-                        <p style="
-                            margin: 20px 0 0;
-                            color: #555b50;
-                            font-size: 11px;
-                        ">
-                            © 2026 Code Elevate. All rights reserved.
+                        <p style="margin:19px 0 0;color:#59647d;font-size:10px;">
+                            © 2026 CodeElevate. All rights reserved.
                         </p>
-
                     </td>
                 </tr>
 
@@ -291,12 +152,10 @@ const htmlTemplate = `
 
         </td>
     </tr>
-
 </table>
 
 </body>
-</html>
-`;
+</html>`;
 
   // Send email through Brevo
   await sendEmail(

@@ -55,7 +55,7 @@ async function createQuestion(req, res) {
             memoryLimit: memoryLimit || 256,
             isPublished: isPublished || false,
             isPremium: isPremium || false,
-            // createdBy: req.user._id
+            createdBy: req.user.id
         })
         return res.status(201).json({success: true,message: "Question created successfully",data: question})
     }
