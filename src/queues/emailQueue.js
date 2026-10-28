@@ -16,6 +16,6 @@ const emailQueue = new Queue("emailQueue", {
             count: 1000,
         },
     },
-});
+})
 
 module.exports = emailQueue
