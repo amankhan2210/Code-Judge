@@ -1,42 +1,3 @@
-# services:
-#   backend:
-#     image: amankhan22/backend:latest
-#     container_name: backend
-#     ports:
-#       - "3000:3000"
-#     env_file:
-#       - .env
-#     depends_on:
-#       - mongodb
-#       - redis
-#     restart: unless-stopped
-
-#   mongodb:
-#     image: mongo:8
-#     container_name: mongodb
-#     ports:
-#       - "27017:27017"
-#     environment:
-#       MONGO_INITDB_ROOT_USERNAME: admin
-#       MONGO_INITDB_ROOT_PASSWORD: 123456
-#     volumes:
-#       - mongo_data:/data/db
-#     restart: unless-stopped
-
-#   redis:
-#     image: redis/redis-stack:latest
-#     container_name: redis
-#     ports:
-#       - "6379:6379"
-#       - "8001:8001"
-#     volumes:
-#       - redis_data:/data
-#     restart: unless-stopped
-
-# volumes:
-#   mongo_data:
-#   redis_data:
-
 services:
   backend:
     image: amankhan22/backend:latest
@@ -47,6 +8,10 @@ services:
       - .env
     environment:
       REDIS_URL: redis://redis:6379
+      SUBMISSION_CONCURRENCY: 2
+      TESTCASE_DIR: /app/testcases
+    volumes:
+      - ./testcases:/app/testcases:ro
     depends_on:
       - mongodb
       - redis
@@ -55,12 +20,30 @@ services:
   email-worker:
     image: amankhan22/backend:latest
     container_name: email-worker
-    command: ["node", "src/workers/emailWorker.js"] 
+    command: ["node", "src/workers/emailWorker.js"]
     env_file:
       - .env
     environment:
       REDIS_URL: redis://redis:6379
     depends_on:
+      - redis
+    restart: unless-stopped
+
+  submission-worker:
+    image: amankhan22/backend:latest
+    container_name: submission-worker
+    command: ["node", "src/workers/submission.worker.js"]
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      SUBMISSION_CONCURRENCY: 2
+      TESTCASE_DIR: /app/testcases
+      JUDGE0_URL: http://151.242.187.250:2358
+    volumes:
+      - ./testcases:/app/testcases:ro
+    depends_on:
+      - mongodb
       - redis
     restart: unless-stopped
 
